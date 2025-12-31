@@ -9,6 +9,7 @@ import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { createIssueSchema } from "@/app/validationSchema";
+import ErrorMessage from "@/app/components/ErrorMessage";
 
 type NewIssueForm = z.infer<typeof createIssueSchema>;
 
@@ -56,11 +57,7 @@ const NewIssuePage = () => {
         })}
       >
         <TextField.Root placeholder="Title" {...register("title")} />
-        {errors.title && (
-          <Text color="red" as="p">
-            {errors.title.message}
-          </Text>
-        )}
+         <ErrorMessage>{errors?.title?.message}</ErrorMessage>
         <Controller
           name="description"
           control={control}
@@ -68,11 +65,9 @@ const NewIssuePage = () => {
             <SimpleMDE placeholder="Description" {...field} />
           )}
         />
-        {errors.description && (
-          <Text color="red" as="p">
-            {errors.description.message}
-          </Text>
-        )}
+       
+          <ErrorMessage>{errors.description?.message}</ErrorMessage>
+      
         <Box as="div" className="flex justify-end">
           <Button type="submit">Submit New Issue</Button>
         </Box>
