@@ -1,35 +1,35 @@
 "use client";
-import { Box, Button, Callout, TextArea } from "@radix-ui/themes";
+import { Box, Button, Callout, Text, TextField } from "@radix-ui/themes";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import SimpleMDE from "react-simplemde-editor";
-import { set, z } from "zod";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { createIssueSchema } from "@/app/validationSchema";
 
-interface NewIssueForm {
-  title: string;
-  description: string;
-}
-
-const newIssueSchema = z.object({
-  title: z.string().min(3, "Title is required"),
-  description: z.string().min(3, "Description is required"),
-});
+type NewIssueForm = z.infer<typeof createIssueSchema>;
 
 const NewIssuePage = () => {
   const [error, setError] = React.useState<string | null>(null);
   const router = useRouter();
-  const { register, handleSubmit, control } = useForm<NewIssueForm>();
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors, isLoading, isValid },
+  } = useForm<NewIssueForm>({
+    resolver: zodResolver(createIssueSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+    },
+  });
 
-  const onSubmit: SubmitHandler<NewIssueForm> = (data) => {
-    const validation = newIssueSchema.safeParse(data);
-    if (!validation.success) {
-      setError("Validation failed. Please check your input.");
-      return;
-    }
-    axios
+  const onSubmit: SubmitHandler<NewIssueForm> = async (data) => {
+    await axios
       .post("/api/issues", data)
       .then((response) => {
         console.log("Issue created successfully:", response.data);
@@ -42,27 +42,37 @@ const NewIssuePage = () => {
   };
 
   return (
-    <div className="max-w-xl flex flex-col gap-4 mx-auto ">
+    <div className="max-w-xl mx-auto ">
       {error && (
         <Callout.Root>
           <Callout.Text color="red">{error}</Callout.Text>
         </Callout.Root>
       )}
 
-      <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
-        <TextArea placeholder="Title" {...register("title")} />
-
+      <form
+        className="mt-10 flex flex-col gap-4  "
+        onSubmit={handleSubmit(onSubmit, (formErrors) => {
+          console.log("Form validation failed", formErrors);
+        })}
+      >
+        <TextField.Root placeholder="Title" {...register("title")} />
+        {errors.title && (
+          <Text color="red" as="p">
+            {errors.title.message}
+          </Text>
+        )}
         <Controller
           name="description"
           control={control}
           render={({ field }) => (
-            <SimpleMDE
-              className="min-h-[300px]"
-              placeholder="Description"
-              {...field}
-            />
+            <SimpleMDE placeholder="Description" {...field} />
           )}
-        ></Controller>
+        />
+        {errors.description && (
+          <Text color="red" as="p">
+            {errors.description.message}
+          </Text>
+        )}
         <Box as="div" className="flex justify-end">
           <Button type="submit">Submit New Issue</Button>
         </Box>
