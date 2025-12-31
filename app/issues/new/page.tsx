@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { createIssueSchema } from "@/app/validationSchema";
 import ErrorMessage from "@/app/components/ErrorMessage";
+import Spinner from "@/app/components/Spinner";
 
 type NewIssueForm = z.infer<typeof createIssueSchema>;
 
@@ -20,7 +21,7 @@ const NewIssuePage = () => {
     register,
     handleSubmit,
     control,
-    formState: { errors, isLoading, isValid },
+    formState: { errors, isLoading, isValid, isSubmitting },
   } = useForm<NewIssueForm>({
     resolver: zodResolver(createIssueSchema),
     defaultValues: {
@@ -57,7 +58,7 @@ const NewIssuePage = () => {
         })}
       >
         <TextField.Root placeholder="Title" {...register("title")} />
-         <ErrorMessage>{errors?.title?.message}</ErrorMessage>
+        <ErrorMessage>{errors?.title?.message}</ErrorMessage>
         <Controller
           name="description"
           control={control}
@@ -65,11 +66,16 @@ const NewIssuePage = () => {
             <SimpleMDE placeholder="Description" {...field} />
           )}
         />
-       
-          <ErrorMessage>{errors.description?.message}</ErrorMessage>
-      
+
+        <ErrorMessage>{errors.description?.message}</ErrorMessage>
+
         <Box as="div" className="flex justify-end">
-          <Button type="submit">Submit New Issue</Button>
+          <Button
+            type="submit"
+            disabled={isSubmitting || isLoading || !isValid}
+          >
+            {isSubmitting ? <Spinner /> : "Submit New Issue"}
+          </Button>
         </Box>
       </form>
     </div>
