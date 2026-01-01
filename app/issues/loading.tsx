@@ -1,25 +1,15 @@
-import { Button, Flex, Table } from "@radix-ui/themes";
-import Link from "next/link";
-import { prisma } from "@/app/api/issues/prisma";
+"use client";
+
+import { Table } from "@radix-ui/themes";
 import IssueStatusBadge from "../components/IssueStatusBadge";
-import { Status } from "../generated/prisma/enums";
-import delay from "delay";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import IssueActions from "./IssueActions";
 
-const IssuesPage = async () => {
-  const data: Array<{
-    id: number;
-    title: string;
-    description: string;
-    status: Status;
-    createdAt: Date;
-    updatedAt: Date;
-  }> = await prisma.issue.findMany();
-
-  await delay(2000); // Simulate network delay for demo purposes
-
+const LoadingIssuesPage = () => {
+  const data = [1, 2, 3, 4, 5]; //dummy data to show loading rows
   return (
-    <div className="">
+    <div>
       <IssueActions />
       <Table.Root className="mt-5" layout={"auto"} variant="surface">
         <Table.Header>
@@ -34,18 +24,18 @@ const IssuesPage = async () => {
           {data.length === 0 && <p>No issues found.</p>}
           {data.length > 0 &&
             data.map((issue) => (
-              <Table.Row key={issue.id.toFixed()}>
+              <Table.Row key={issue}>
                 <Table.Cell>
-                  {issue.title}
+                  <Skeleton />
                   <div className="block md:hidden">
-                    <IssueStatusBadge status={issue.status} />
+                    <Skeleton />
                   </div>
                 </Table.Cell>
                 <Table.Cell className="hidden md:table-cell">
-                  <IssueStatusBadge status={issue.status} />
+                  <Skeleton />
                 </Table.Cell>
                 <Table.Cell className="hidden md:table-cell">
-                  {issue.createdAt.toDateString()}
+                  <Skeleton />
                 </Table.Cell>
               </Table.Row>
             ))}
@@ -55,4 +45,4 @@ const IssuesPage = async () => {
   );
 };
 
-export default IssuesPage;
+export default LoadingIssuesPage;
