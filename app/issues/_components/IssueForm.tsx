@@ -1,7 +1,7 @@
 "use client";
 import { ErrorMessage } from "@/app/components";
 import { Issue } from "@/app/generated/prisma/client";
-import { createIssueSchema } from "@/app/validationSchema";
+import { IssueSchema } from "@/app/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, Callout, Spinner, TextField } from "@radix-ui/themes";
 import axios from "axios";
@@ -16,7 +16,7 @@ const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
 });
 
-type IssueFormData = z.infer<typeof createIssueSchema>;
+type IssueFormData = z.infer<typeof IssueSchema>;
 
 const IssueForm = ({ issue }: { issue?: Issue }) => {
   console.log("Issue from Edit page: ", issue);
@@ -28,7 +28,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
     control,
     formState: { errors, isLoading, isValid, isSubmitting },
   } = useForm<IssueFormData>({
-    resolver: zodResolver(createIssueSchema),
+    resolver: zodResolver(IssueSchema),
     // If issue is provided (edit mode), set default values
     defaultValues: issue
       ? {
@@ -42,16 +42,18 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
   });
 
   const onSubmit: SubmitHandler<IssueFormData> = async (data) => {
-    await axios
-      .post("/api/issues", data)
-      .then((response) => {
-        console.log("Issue created successfully:", response.data);
-        router.push("/issues");
-      })
-      .catch((error) => {
-        // console.error("Error creating issue:", error);
-        setError("Failed to create issue. Please try again.");
-      });
+    try {
+      setError(null);
+      if (issue) {
+        await axios.patch(`/api/issues/${issue.id}`, data);
+      } else {
+        await axios.post("/api/issues", data);
+      }
+
+      router.push("/issues");
+    } catch (e) {
+      setError("An unexpected error occurred. Please try again.");
+    }
   };
 
   return (
