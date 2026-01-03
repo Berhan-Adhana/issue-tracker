@@ -1,16 +1,17 @@
 "use client";
-import { Box, Button, Callout, Text, TextField } from "@radix-ui/themes";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import SimpleMDE from "react-simplemde-editor";
-import { z } from "zod";
+import ErrorMessage from "@/app/components/ErrorMessage";
+import Spinner from "@/app/components/Spinner";
+import { createIssueSchema } from "@/app/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Box, Button, Callout, TextField } from "@radix-ui/themes";
 import axios from "axios";
+import delay from "delay";
 import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { createIssueSchema } from "@/app/validationSchema";
-import ErrorMessage from "@/app/components/ErrorMessage";
-import Spinner from "@/app/components/Spinner";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import SimpleMDE from "react-simplemde-editor";
+import { z } from "zod";
 
 type NewIssueForm = z.infer<typeof createIssueSchema>;
 
@@ -42,9 +43,9 @@ const NewIssuePage = () => {
         setError("Failed to create issue. Please try again.");
       });
   };
-
+  delay(5000);
   return (
-    <div className="max-w-xl mx-auto ">
+    <div className="max-w-xl">
       {error && (
         <Callout.Root>
           <Callout.Text color="red">{error}</Callout.Text>
