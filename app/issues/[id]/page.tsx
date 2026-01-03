@@ -3,6 +3,8 @@ import IssueStatusBadge from "@/app/components/IssueStatusBadge";
 import { Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { notFound } from "next/navigation";
 
+import ReactMarkdown from "react-markdown";
+
 interface Props {
   params: Promise<{ id: string }>;
 }
@@ -19,8 +21,8 @@ const IssuesDetailPage = async ({ params }: Props) => {
         <IssueStatusBadge status={issue.status} />
         <Text>Created At: {issue.createdAt.toDateString()} </Text>
       </Flex>
-      <Card variant="surface" className="mt-5 p-5">
-        <p>Status: {issue.description}</p>
+      <Card className="mt-5 p-5 prose">
+        <ReactMarkdown>{issue.description}</ReactMarkdown>
       </Card>
     </div>
   );
