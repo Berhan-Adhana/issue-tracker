@@ -1,18 +1,11 @@
 import { prisma } from "@/app/api/issues/prisma";
 import { Link, Table } from "@radix-ui/themes";
 import { IssueStatusBadge } from "@/app/components";
-import { Status } from "../generated/prisma/enums";
 import IssueActions from "./IssueActions";
+import { Issue } from "../generated/prisma/client";
 
 const IssuesPage = async () => {
-  const data: Array<{
-    id: number;
-    title: string;
-    description: string;
-    status: Status;
-    createdAt: Date;
-    updatedAt: Date;
-  }> = await prisma.issue.findMany();
+  const data: Issue[] = await prisma.issue.findMany();
 
   return (
     <div className="">
@@ -53,3 +46,5 @@ const IssuesPage = async () => {
 };
 
 export default IssuesPage;
+
+export const dynamic = "force-dynamic";
