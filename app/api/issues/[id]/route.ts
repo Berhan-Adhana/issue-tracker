@@ -26,13 +26,24 @@ export async function PATCH(request: NextRequest, { params }: Props) {
       { status: 404 }
     );
   }
+}
 
-  const updatedIssue = await prisma.issue.update({
+export async function DELETE(request: NextRequest, { params }: Props) {
+  const { id } = await params;
+  const issue = await prisma.issue.findUnique({
     where: { id: parseInt(id) },
-    data: {
-      title: body.title || "Updated Title",
-      description: body.description || "Updated Description",
-    },
   });
-  return NextResponse.json(updatedIssue, { status: 200 });
+
+  if (!issue) {
+    return NextResponse.json(
+      { error: `Issue with id ${id} not found` },
+      { status: 404 }
+    );
+  }
+
+  await prisma.issue.delete({
+    where: { id: parseInt(id) },
+  });
+
+  return NextResponse.json({ message: "Issue deleted successfully" });
 }
