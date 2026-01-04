@@ -11,7 +11,7 @@ const LoadingIssueDetailPage = () => {
         <Skeleton width={150} />
       </Flex>
       <Card className="mt-5 p-5 prose">
-        <Skeleton count={5} />
+        <Skeleton height={"20rem"} />
       </Card>
     </Box>
   );
