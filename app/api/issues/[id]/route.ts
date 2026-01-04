@@ -30,6 +30,7 @@ export async function PATCH(request: NextRequest, { params }: Props) {
 
 export async function DELETE(request: NextRequest, { params }: Props) {
   const { id } = await params;
+
   const issue = await prisma.issue.findUnique({
     where: { id: parseInt(id) },
   });
@@ -44,7 +45,6 @@ export async function DELETE(request: NextRequest, { params }: Props) {
   await prisma.issue.delete({
     where: { id: parseInt(id) },
   });
-
 
   return NextResponse.json({ message: "Issue deleted successfully" });
 }

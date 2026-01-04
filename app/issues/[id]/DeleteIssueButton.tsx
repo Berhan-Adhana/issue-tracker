@@ -6,12 +6,15 @@ import Link from "next/link";
 import axios from "axios";
 import { use, useState } from "react";
 import { set } from "zod";
+import { Spinner } from "@/app/components";
 
 const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
   const router = useRouter();
   const [error, setError] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const deleteIssue = () => {
+    setIsDeleting(true);
     axios
       .delete("/api/issues/" + issueId)
       .then(() => {
@@ -19,6 +22,7 @@ const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
         router.refresh();
       })
       .catch((error) => {
+        setIsDeleting(false);
         setError(true);
         console.error("Failed to delete the issue:", error.message);
       });
@@ -28,9 +32,14 @@ const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
     <>
       <AlertDialog.Root>
         <AlertDialog.Trigger>
-          <Button color="red">
-            <TrashIcon />
-            Delete Issue
+          <Button color="red" disabled={isDeleting}>
+            {isDeleting ? (
+              <Spinner />
+            ) : (
+              <>
+                <TrashIcon /> Delete Issue
+              </>
+            )}
           </Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content maxWidth="450px">
@@ -39,7 +48,7 @@ const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
             Are you sure you want to delete this issue?
           </AlertDialog.Description>
 
-          <Box mt="4">
+          <Flex gap={"2"} mt="4">
             <AlertDialog.Cancel>
               <Button variant="soft" color="gray">
                 Cancel
@@ -50,7 +59,7 @@ const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
                 Confirm Delete
               </Button>
             </AlertDialog.Action>
-          </Box>
+          </Flex>
         </AlertDialog.Content>
       </AlertDialog.Root>
 
