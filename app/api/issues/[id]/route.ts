@@ -45,5 +45,6 @@ export async function DELETE(request: NextRequest, { params }: Props) {
     where: { id: parseInt(id) },
   });
 
+
   return NextResponse.json({ message: "Issue deleted successfully" });
 }
