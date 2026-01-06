@@ -1,4 +1,4 @@
-import { prisma } from "@/app/api/issues/prisma";
+import { prisma } from "@/prisma/prisma";
 import { Link, Table } from "@radix-ui/themes";
 import { IssueStatusBadge } from "@/app/components";
 import IssueActions from "./IssueActions";
