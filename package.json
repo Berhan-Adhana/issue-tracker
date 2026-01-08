@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@auth/core": "^0.41.0",
     "@auth/prisma-adapter": "^2.11.1",
     "@babel/runtime": "^7.28.4",
     "@hookform/resolvers": "^5.2.2",
