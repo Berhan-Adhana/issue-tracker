@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../prisma/prisma";
 import { IssueSchema } from "@/app/validationSchema";
 import { z } from "zod";
+import { auth } from "@/auth";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -29,6 +30,11 @@ export async function PATCH(request: NextRequest, { params }: Props) {
 }
 
 export async function DELETE(request: NextRequest, { params }: Props) {
+  const session = await auth();
+
+  if (!session)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const { id } = await params;
 
   const issue = await prisma.issue.findUnique({

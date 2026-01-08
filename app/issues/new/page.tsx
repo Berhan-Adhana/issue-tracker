@@ -1,14 +1,14 @@
-"use client";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import NewIssueClient from "./NewIssueClient";
 
-import dynamic from "next/dynamic";
-import IssueFormSkeleton from "./loading";
+const NewIssuePage = async () => {
+  const session = await auth();
+  if (!session) {
+    redirect("/api/auth/signin");
+  }
 
-const IssueForm = dynamic(() => import("../_components/IssueForm"), {
-  ssr: false,
-  loading: () => <IssueFormSkeleton />,
-});
-const NewIssuePage = () => {
-  return <IssueForm />;
+  return <NewIssueClient />;
 };
 
 export default NewIssuePage;
