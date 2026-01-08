@@ -58,11 +58,7 @@ const AuthStatus = () => {
 
   if (status === "loading") return <Skeleton width={"3rem"} />;
   if (status === "unauthenticated")
-    return (
-      <Button>
-        <Link href={"/api/auth/signin"}>Login</Link>
-      </Button>
-    );
+    return <Link href={"/api/auth/signin"}>Login</Link>;
 
   if (status === "authenticated")
     return (
