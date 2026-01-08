@@ -1,17 +1,16 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React from "react";
-import { AiFillBug } from "react-icons/ai";
+import { Avatar, Box, Button, Container, Flex, Text } from "@radix-ui/themes";
 import classNames from "classnames";
 import { useSession } from "next-auth/react";
-import { Box, Button, Container, Flex } from "@radix-ui/themes";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { AiFillBug } from "react-icons/ai";
+import { DropdownMenu } from "@radix-ui/themes";
+import { Skeleton } from "@/app/components";
 
 const NavBar = () => {
   const currentPath = usePathname();
-  const { status, data: session } = useSession();
-  console.log("Session data: ", session);
 
   const links = [
     { name: "Dashboard", href: "/" },
@@ -45,21 +44,51 @@ const NavBar = () => {
             </Flex>
           </Box>
           <Box>
-            {status === "unauthenticated" && (
-              <Button>
-                <Link href={"/api/auth/signin"}>Login</Link>
-              </Button>
-            )}
-            {status === "authenticated" && (
-              <Button>
-                <Link href={"/api/auth/signout"}>Logout</Link>
-              </Button>
-            )}
+            <AuthStatus />
           </Box>
         </Flex>
       </Container>
     </nav>
   );
+};
+
+const AuthStatus = () => {
+  const { status, data: session } = useSession();
+  console.log("Session data: ", session);
+
+  if (status === "loading") return <Skeleton width={"3rem"} />;
+  if (status === "unauthenticated")
+    return (
+      <Button>
+        <Link href={"/api/auth/signin"}>Login</Link>
+      </Button>
+    );
+
+  if (status === "authenticated")
+    return (
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger>
+          <Avatar
+            radius="full"
+            size={"2"}
+            src={session!.user!.image!}
+            className="cursor-pointer"
+            referrerPolicy="no-referrer"
+            fallback="?"
+          />
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          <DropdownMenu.Label>
+            <Text size={"2"}>{session!.user!.email}</Text>
+          </DropdownMenu.Label>
+          <DropdownMenu.Separator />
+          <DropdownMenu.Item>
+            {" "}
+            <Link href={"/api/auth/signout"}>Log out</Link>
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
+    );
 };
 
 export default NavBar;
