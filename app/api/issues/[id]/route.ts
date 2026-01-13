@@ -10,6 +10,8 @@ interface Props {
 export async function PATCH(request: NextRequest, { params }: Props) {
   const { id } = await params;
   const body = await request.json();
+  console.log("This Object is from the Client");
+  console.log(body);
   const validation = IssueSchema.safeParse(body);
   if (!validation.success) {
     return NextResponse.json(
@@ -27,6 +29,15 @@ export async function PATCH(request: NextRequest, { params }: Props) {
       { status: 404 }
     );
   }
+  const updatedissue = await prisma.issue.update({
+    where: { id: parseInt(id) },
+    data: {
+      title: body.title,
+      description: body.description,
+    },
+  });
+
+  return NextResponse.json(updatedissue, { status: 200 });
 }
 
 export async function DELETE(request: NextRequest, { params }: Props) {

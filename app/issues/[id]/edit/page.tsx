@@ -10,10 +10,11 @@ interface Props {
 const EditIssuePage = async ({ params }: Props) => {
   const session = await auth();
 
-  if (!session) {
-    redirect("/api/auth/signin");
-  }
   const id = (await params).id;
+  if (!session) {
+    // redirect(`/api/auth/signin?callbackUrl=/issues/${params.id}/edit`);
+    redirect(`/api/auth/signin?callbackUrl=/issues/${id}/edit`);
+  }
 
   const issue = await prisma.issue.findUnique({
     where: { id: parseInt(id) },

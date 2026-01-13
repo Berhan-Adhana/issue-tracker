@@ -1,8 +1,9 @@
-"use client";
+
 import { IssueStatusBadge } from "@/app/components";
 import { Issue } from "@/app/generated/prisma/client";
 import { Card, Flex, Heading, Text } from "@radix-ui/themes";
-import MarkdownPreview from "@uiw/react-markdown-preview";
+import MarkdownPreviewClient from "./MarkdownPreviewClient";
+
 
 const IssueDetails = ({ issue }: { issue: Issue }) => {
   return (
@@ -13,7 +14,7 @@ const IssueDetails = ({ issue }: { issue: Issue }) => {
         <Text>Created At: {issue.createdAt.toDateString()} </Text>
       </Flex>
       <Card className="mt-5 p-5 prose max-w-full">
-        <MarkdownPreview source={issue.description} />
+        <MarkdownPreviewClient source={issue.description} />
       </Card>
     </>
   );
