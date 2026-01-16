@@ -13,7 +13,6 @@ const IssuesDetailPage = async ({ params }: Props) => {
   const { id } = await params;
   const issue = await prisma.issue.findUnique({ where: { id: Number(id) } });
 
-
   if (!issue) notFound();
 
   return (
@@ -24,7 +23,7 @@ const IssuesDetailPage = async ({ params }: Props) => {
 
       <Box>
         <Flex direction="column" gap="3">
-          <AssigneeSelect/>
+          <AssigneeSelect issue={issue} />
           <EditIssueButton issueId={issue.id} />
           <DeleteIssueButton issueId={issue.id} />
         </Flex>

@@ -1,23 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../prisma/prisma";
-import { IssueSchema } from "@/app/validationSchema";
+import { patchIssueSchema } from "@/app/validationSchema";
 import { z } from "zod";
 import { auth } from "@/auth";
 
 interface Props {
   params: Promise<{ id: string }>;
 }
+
 export async function PATCH(request: NextRequest, { params }: Props) {
   const { id } = await params;
+  console.log("The id is: ", id);
   const body = await request.json();
-  console.log("This Object is from the Client");
-  console.log(body);
-  const validation = IssueSchema.safeParse(body);
+  const session = await auth();
+
+  if (!session) return NextResponse.json({}, { status: 401 });
+
+  const validation = patchIssueSchema.safeParse(body);
+
   if (!validation.success) {
     return NextResponse.json(
       { error: z.treeifyError(validation.error) },
       { status: 400 }
     );
+  }
+  const { title, description, assignedToUserId } = body;
+  if (assignedToUserId) {
+    const user = await prisma.user.findUnique({
+      where: { id: assignedToUserId },
+    });
+    if (!user) {
+      return NextResponse.json({ error: "Invalid User!" }, { status: 400 });
+    }
   }
   const issue = await prisma.issue.findUnique({
     where: { id: parseInt(id) },
@@ -32,8 +46,9 @@ export async function PATCH(request: NextRequest, { params }: Props) {
   const updatedissue = await prisma.issue.update({
     where: { id: parseInt(id) },
     data: {
-      title: body.title,
-      description: body.description,
+      title,
+      description,
+      assignedToUserId,
     },
   });
 

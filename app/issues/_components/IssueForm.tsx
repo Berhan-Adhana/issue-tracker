@@ -7,16 +7,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, Callout, Spinner, TextField } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
-import SimpleMDE from "react-simplemde-editor";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import SimpleMDE from "react-simplemde-editor";
 import z from "zod";
 
 type IssueFormData = z.infer<typeof IssueSchema>;
 
 const IssueForm = ({ issue }: { issue?: Issue }) => {
-  console.log("Issue from Edit page: ", issue);
   const [error, setError] = React.useState<string | null>(null);
   const router = useRouter();
   const {
@@ -42,11 +41,15 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
     try {
       setError(null);
       if (issue) {
-        await axios.patch(`/api/issues/${issue.id}`, data);
+        await axios.patch(`/api/issues/${issue.id}`, data, {
+          headers: {
+            "Content-type": "application/json",
+          },
+        });
       } else {
         await axios.post("/api/issues", data);
       }
-      router.push("/issues");
+      router.push("/issues/list");
       router.refresh();
     } catch (e) {
       setError("An unexpected error occurred. Please try again.");
