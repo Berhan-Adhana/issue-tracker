@@ -1,11 +1,12 @@
-import React from 'react'
+import React from "react";
+import LatestIssues from "./LatestIssues";
 
 const Home = () => {
   return (
     <div>
-      Home
+      <LatestIssues />
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
