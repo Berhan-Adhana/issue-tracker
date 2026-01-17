@@ -1,11 +1,24 @@
 import { prisma } from "@/prisma/prisma";
-import { Link, Table } from "@radix-ui/themes";
+import { Link, Table, Text } from "@radix-ui/themes";
 import { IssueStatusBadge } from "@/app/components";
 import IssueActions from "./IssueActions";
-import { Issue } from "../generated/prisma/client";
+import { Status } from "@/app/generated/prisma/enums";
+import { Issue } from "@/app/generated/prisma/client";
 
-const IssuesPage = async () => {
-  const data: Issue[] = await prisma.issue.findMany();
+interface Props {
+  searchParams?: { status?: string };
+}
+const IssuesPage = async ({ searchParams }: Props) => {
+  const statusParam = await searchParams;
+
+  const status = Object.values(Status).includes(statusParam?.status as Status)
+    ? (statusParam?.status as Status)
+    : undefined;
+
+  console.log("Search params:", status);
+  const data: Issue[] = await prisma.issue.findMany({
+    where: { status },
+  });
 
   return (
     <div className="">
@@ -20,7 +33,7 @@ const IssuesPage = async () => {
         </Table.Header>
 
         <Table.Body>
-          {data.length === 0 && <p>No issues found.</p>}
+          {data.length === 0 && <Text className="p-3">No issues found.</Text>}
           {data.length > 0 &&
             data.map((issue) => (
               <Table.Row key={issue.id.toFixed()}>
