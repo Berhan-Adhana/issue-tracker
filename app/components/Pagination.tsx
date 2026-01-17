@@ -8,7 +8,7 @@ import {
 } from "@radix-ui/react-icons";
 import { Flex, Button, Text } from "@radix-ui/themes";
 import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 interface Props {
   itemCount: number;
@@ -29,7 +29,7 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
   const pageCount = Math.ceil(itemCount / pageSize);
   if (pageCount <= 1) return null;
   return (
-    <Flex align="center" gap="2">
+    <Flex align="center" gap="2" mt={"3"}>
       <Text size="2">
         Page {currentPage} of {pageCount}
       </Text>
