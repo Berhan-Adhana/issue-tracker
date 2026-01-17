@@ -5,6 +5,7 @@ import IssueActions from "./IssueActions";
 import IssueTable, { columnNames, IssueQuery } from "./IssueTable";
 import Pagination from "@/app/components/Pagination";
 import { Flex } from "@radix-ui/themes";
+import { Metadata } from "next";
 
 interface Props {
   searchParams: IssueQuery;
@@ -47,12 +48,17 @@ export default IssuesPage;
 
 export const dynamic = "force-dynamic";
 
-export const tableColumns: {
-  label: string;
-  value: keyof Issue;
-  className?: string;
-}[] = [
-  { label: "Issue", value: "title" },
-  { label: "Status", value: "status", className: "hidden md:table-cell" },
-  { label: "Create", value: "createdAt", className: "hidden md:table-cell" },
-];
+// export const tableColumns: {
+//   label: string;
+//   value: keyof Issue;
+//   className?: string;
+// }[] = [
+//   { label: "Issue", value: "title" },
+//   { label: "Status", value: "status", className: "hidden md:table-cell" },
+//   { label: "Create", value: "createdAt", className: "hidden md:table-cell" },
+// ];
+
+export const metadata: Metadata = {
+  title: "Issue Tracker - Issues List",
+  description: "View all project issues",
+};
