@@ -1,5 +1,4 @@
-import { Issue } from "@/app/generated/prisma/client";
-import { Status } from "@/app/generated/prisma/enums";
+import { Status } from "@/app/generated/prisma/client";
 import { prisma } from "@/prisma/prisma";
 import IssueActions from "./IssueActions";
 import IssueTable, { columnNames, IssueQuery } from "./IssueTable";

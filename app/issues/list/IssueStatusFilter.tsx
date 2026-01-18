@@ -1,6 +1,6 @@
 "use client";
 
-import { Status } from "@/app/generated/prisma/enums";
+import { Status } from "@/app/generated/prisma/client";
 import { Select } from "@radix-ui/themes";
 import { useRouter, useSearchParams } from "next/navigation";
 
