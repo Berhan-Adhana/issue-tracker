@@ -30,6 +30,9 @@ const Home = async () => {
 
 export default Home;
 
+export const dynamic = "force-dynamic";
+
+
 export const metadata: Metadata = {
   title: "Issue Tracker - Dashboard",
   description: "View a summury of project issues",
