@@ -1,4 +1,4 @@
-import { prisma } from "@/prisma/prisma";
+import prisma from "@/prisma/prisma";
 import { Card, Heading, Table, Flex, Avatar } from "@radix-ui/themes";
 import Link from "next/link";
 import { IssueStatusBadge } from "./components";

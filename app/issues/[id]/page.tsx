@@ -1,4 +1,4 @@
-import { prisma } from "@/prisma/prisma";
+import prisma from "@/prisma/prisma";
 import { Box, Flex, Grid } from "@radix-ui/themes";
 import { notFound } from "next/navigation";
 import EditIssueButton from "./EditIssueButton";

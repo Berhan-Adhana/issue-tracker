@@ -1,4 +1,4 @@
-import { prisma } from "@/prisma/prisma";
+import prisma from "@/prisma/prisma";
 import IssueForm from "../../_components/IssueForm";
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";

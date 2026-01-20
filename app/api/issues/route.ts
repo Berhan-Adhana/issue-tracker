@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "../../../prisma/prisma";
+import prisma from "../../../prisma/prisma";
 import { IssueSchema } from "../../validationSchema";
 
 export async function POST(request: NextRequest) {
@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   if (!validation.success) {
     return NextResponse.json(
       { errors: validation.error.message },
-      { status: 400 }
+      { status: 400 },
     );
   }
 

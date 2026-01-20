@@ -4,7 +4,7 @@ import { Issue, User } from "@/app/generated/prisma/client";
 
 import { Select } from "@radix-ui/themes";
 import axios from "axios";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {  useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/app/components/";
 import toast, { Toaster } from "react-hot-toast";
 

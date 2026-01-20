@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "../../../../prisma/prisma";
+import prisma from "../../../../prisma/prisma";
 import { patchIssueSchema } from "@/app/validationSchema";
 import { z } from "zod";
 import { auth } from "@/auth";
@@ -21,7 +21,7 @@ export async function PATCH(request: NextRequest, { params }: Props) {
   if (!validation.success) {
     return NextResponse.json(
       { error: z.treeifyError(validation.error) },
-      { status: 400 }
+      { status: 400 },
     );
   }
   const { title, description, assignedToUserId } = body;
@@ -40,7 +40,7 @@ export async function PATCH(request: NextRequest, { params }: Props) {
   if (!issue) {
     return NextResponse.json(
       { error: `Issue with id ${id} not found` },
-      { status: 404 }
+      { status: 404 },
     );
   }
   const updatedissue = await prisma.issue.update({
@@ -70,7 +70,7 @@ export async function DELETE(request: NextRequest, { params }: Props) {
   if (!issue) {
     return NextResponse.json(
       { error: `Issue with id ${id} not found` },
-      { status: 404 }
+      { status: 404 },
     );
   }
 
